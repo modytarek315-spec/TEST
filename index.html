@@ -62,11 +62,11 @@
             store_tagline: "Quality Parts for Your Vehicle",
             contact_phone: "+1 (555) 123-4567",
             contact_email: "info@autoparts.com",
-            primary_color: "#2c3e50",
-            secondary_color: "#3498db",
-            accent_color: "#e74c3c",
-            success_color: "#27ae60",
-            background_color: "#f8f9fa",
+            primary_color: "#2C2C2C",
+            secondary_color: "#FFC700",
+            accent_color: "#FFC700",
+            success_color: "#FFD700",
+            background_color: "#1A1A1A",
             font_family: "Segoe UI",
             font_size: 16
         };
@@ -401,75 +401,63 @@
                 return;
             }
 
+            function applyConfig(newConfig) {
+                config = { ...newConfig };
+                const root = document.documentElement;
+
+                // Set CSS variables for colors
+                root.style.setProperty('--primary-color', config.primary_color || defaultConfig.primary_color);
+                root.style.setProperty('--secondary-color', config.secondary_color || defaultConfig.secondary_color);
+                root.style.setProperty('--accent-color', config.accent_color || defaultConfig.accent_color);
+                root.style.setProperty('--success-color', config.success_color || defaultConfig.success_color);
+                root.style.setProperty('--background-color', config.background_color || defaultConfig.background_color);
+
+                // Update text content
+                const storeName = document.getElementById('store-name');
+                const storeTagline = document.getElementById('store-tagline');
+                const contactPhone = document.getElementById('contact-phone');
+                const contactEmail = document.getElementById('contact-email');
+
+                if (storeName) storeName.textContent = config.store_name || defaultConfig.store_name;
+                if (storeTagline) storeTagline.textContent = config.store_tagline || defaultConfig.store_tagline;
+                if (contactPhone) contactPhone.textContent = config.contact_phone || defaultConfig.contact_phone;
+                if (contactEmail) contactEmail.textContent = config.contact_email || defaultConfig.contact_email;
+
+                // Update font styles
+                const customFont = config.font_family || defaultConfig.font_family;
+                const baseFontStack = 'Tahoma, Geneva, Verdana, sans-serif';
+                document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+                const baseSize = config.font_size || defaultConfig.font_size;
+                document.body.style.fontSize = `${baseSize}px`;
+
+                // Update dynamic font sizes
+                const pageTitles = document.querySelectorAll('.page-title');
+                pageTitles.forEach(title => {
+                    title.style.fontSize = `${baseSize * 2}px`;
+                });
+
+                const pageSubtitles = document.querySelectorAll('.page-subtitle');
+                pageSubtitles.forEach(subtitle => {
+                    subtitle.style.fontSize = `${baseSize}px`;
+                });
+
+                const productNames = document.querySelectorAll('.product-name');
+                productNames.forEach(name => {
+                    name.style.fontSize = `${baseSize * 1.125}px`;
+                });
+
+                const productPrices = document.querySelectorAll('.product-price');
+                productPrices.forEach(price => {
+                    price.style.fontSize = `${baseSize * 1.5}px`;
+                });
+            }
+
             if (window.elementSdk) {
                 window.elementSdk.init({
                     defaultConfig,
                     onConfigChange: async (newConfig) => {
-                        config = { ...newConfig };
-
-                        const storeName = document.getElementById('store-name');
-                        const storeTagline = document.getElementById('store-tagline');
-                        const contactPhone = document.getElementById('contact-phone');
-                        const contactEmail = document.getElementById('contact-email');
-
-                        if (storeName) storeName.textContent = config.store_name || defaultConfig.store_name;
-                        if (storeTagline) storeTagline.textContent = config.store_tagline || defaultConfig.store_tagline;
-                        if (contactPhone) contactPhone.textContent = config.contact_phone || defaultConfig.contact_phone;
-                        if (contactEmail) contactEmail.textContent = config.contact_email || defaultConfig.contact_email;
-
-                        const header = document.querySelector('.header');
-                        if (header) {
-                            header.style.background = `linear-gradient(135deg, ${config.primary_color || defaultConfig.primary_color} 0%, ${adjustColor(config.primary_color || defaultConfig.primary_color, 20)} 100%)`;
-                        }
-
-                        const cartBtn = document.querySelector('.cart-btn');
-                        if (cartBtn) {
-                            cartBtn.style.background = config.accent_color || defaultConfig.accent_color;
-                        }
-
-                        const searchBtn = document.querySelector('.search-btn');
-                        if (searchBtn) {
-                            searchBtn.style.background = config.secondary_color || defaultConfig.secondary_color;
-                        }
-
-                        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
-                        addToCartBtns.forEach(btn => {
-                            btn.style.background = config.success_color || defaultConfig.success_color;
-                        });
-
-                        const checkoutBtns = document.querySelectorAll('.checkout-btn');
-                        checkoutBtns.forEach(btn => {
-                            btn.style.background = config.accent_color || defaultConfig.accent_color;
-                        });
-
-                        document.body.style.background = config.background_color || defaultConfig.background_color;
-
-                        const customFont = config.font_family || defaultConfig.font_family;
-                        const baseFontStack = 'Tahoma, Geneva, Verdana, sans-serif';
-                        document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-
-                        const baseSize = config.font_size || defaultConfig.font_size;
-                        document.body.style.fontSize = `${baseSize}px`;
-
-                        const pageTitles = document.querySelectorAll('.page-title');
-                        pageTitles.forEach(title => {
-                            title.style.fontSize = `${baseSize * 2}px`;
-                        });
-
-                        const pageSubtitles = document.querySelectorAll('.page-subtitle');
-                        pageSubtitles.forEach(subtitle => {
-                            subtitle.style.fontSize = `${baseSize}px`;
-                        });
-
-                        const productNames = document.querySelectorAll('.product-name');
-                        productNames.forEach(name => {
-                            name.style.fontSize = `${baseSize * 1.125}px`;
-                        });
-
-                        const productPrices = document.querySelectorAll('.product-price');
-                        productPrices.forEach(price => {
-                            price.style.fontSize = `${baseSize * 1.5}px`;
-                        });
+                        applyConfig(newConfig);
                     },
                     mapToCapabilities: (cfg) => ({
                         recolorables: [
@@ -534,6 +522,7 @@
                 });
             }
 
+            applyConfig(defaultConfig); // Apply the initial configuration
             showCategory('home');
             loadSearchHistory();
             renderSearchHistory();
