@@ -192,9 +192,14 @@ body {
 
 .page-subtitle {
     font-size: 18px;
-    color: #000000;
+    color: #ffffff;
     margin: 0 0 40px 0;
     text-align: center;
+}
+
+.currency-symbol {
+    font-size: 0.7em;
+    vertical-align: super;
 }
 
 .products-grid {
@@ -205,12 +210,16 @@ body {
 }
 
 .product-card {
-    background: rgb(207, 242, 234);
+    background-color: #333;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     cursor: pointer;
+    color: white;
 }
 
 .product-card:hover {
